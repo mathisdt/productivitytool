@@ -4,6 +4,9 @@ import java.util.*;
 
 public class Person {
 	
+	private static final String SEPARATOR = ", ";
+	private static final String EMPTY_STRING = "";
+	
 	private String givenname = null;
 	private String lastname = null;
 	private Date birthday = null;
@@ -75,6 +78,41 @@ public class Person {
 			}
 		}
 		return cal;
+	}
+	
+	public String getContactPossibilities() {
+		StringBuilder ret = new StringBuilder();
+		if (!isEmpty(getPhone1())) {
+			ret.append(getPhone1());
+		}
+		if (!isEmpty(getPhone2())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getPhone2());
+		}
+		if (!isEmpty(getPhone3())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getPhone3());
+		}
+		// nur wenn keine Telefonnummern vorhanden sind
+		if (isEmpty(ret) && !isEmpty(getEmail())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail());
+		}
+		return ret.toString();
+	}
+	
+	private static boolean isEmpty(String string) {
+		return (string==null || string.equals(EMPTY_STRING));
+	}
+	
+	private static boolean isEmpty(StringBuilder sb) {
+		return (sb==null || sb.length()==0);
 	}
 	
 	public String getGivenname() {

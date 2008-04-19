@@ -12,7 +12,7 @@ import org.zephyrsoft.pdbtool.util.*;
 public class Birthday {
 	
 	/** Diese Anzahl von Tagen wird im Voraus und im Nachhinein angezeigt. */
-	private static final int DAYS_TO_CONSIDER = 6;
+	private static final int DAYS_TO_CONSIDER = 4;
 	private static String[] dayNames = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
 	
 	private final Date today = new Date();
@@ -86,9 +86,12 @@ public class Birthday {
 		String ageBegin = " [";
 		String ageEnd = "]";
 		String colon = ": ";
+		String comma = ", ";
 		String point = ".";
 		String space = " ";
-		String the = ", den "; 
+		String the = "den ";
+		String contactBegin = " (";
+		String contactEnd = ")";
 		
 		for (Person person : persons) {
 			if (person.getBirthday()!=null && dateComparator.compare(begin, person.getBirthday())<=0 && dateComparator.compare(person.getBirthday(), end)<=0) {
@@ -115,6 +118,7 @@ public class Birthday {
 				}
 				toPrint.append(colon)
 					.append(getDayNameThisYear(person.getBirthday()))
+					.append(comma)
 					.append(the)
 					.append(person.getBirthday().getDate())
 					.append(point)
@@ -123,8 +127,17 @@ public class Birthday {
 				if ((person.getBirthday().getYear()+1900)!=2200) {
 					toPrint.append((person.getBirthday().getYear()+1900));
 				}
-				toPrint.append(endMark)
-					.append(breakMark);
+				toPrint.append(endMark);
+				String contactPossibilities = person.getContactPossibilities();
+				if (contactPossibilities!=null && contactPossibilities.length()>0) {
+					toPrint.append(beginMark1)
+						.append(ColorMarkEnum.CONTACT_POSSIBILITIES.getColor())
+						.append(beginMark2)
+						.append(contactBegin)
+						.append(contactPossibilities)
+						.append(contactEnd);
+				}
+				toPrint.append(breakMark);
 			}
 		}
 		
@@ -170,7 +183,8 @@ public class Birthday {
 	private enum ColorMarkEnum {
 		DATE_IS_BEFORE("#9C2828"),
 		DATE_IS_TODAY("#0E8214"),
-		DATE_IS_AFTER("#000000");
+		DATE_IS_AFTER("#000000"),
+		CONTACT_POSSIBILITIES("#7f7f7f");
 		
 		private String color = null;
 		
