@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jsyncmanager_3-2_beta_01.jar" sourcepath="lib/jsyncmanager-src_3-2_beta_01.jar"/>
+	<classpathentry kind="lib" path="lib/jsyncmanager-api_3-2_beta_01.jar" sourcepath="lib/jsyncmanager-api-src_3-2_beta_01.jar"/>
+	<classpathentry kind="lib" path="lib/jsyncmanager-jconduits_3-2_beta_01.jar" sourcepath="lib/jsyncmanager-jconduits-src_3-2_beta_01.jar"/>
+	<classpathentry kind="output" path="java"/>
+</classpath>
