@@ -156,9 +156,10 @@ public class Birthday {
 	}
 	
 	private String getDayNameThisYear(Date date) {
-		Date myDate = (Date)date.clone();
-		myDate.setYear(today.getYear());
-		return getDayName(myDate.getDay());
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		cal.set(Calendar.YEAR, today.getYear()+1900);
+		return getDayName(cal.get(Calendar.DAY_OF_WEEK));
 	}
 	
 	private static String getDayName(int dayofweek) {
