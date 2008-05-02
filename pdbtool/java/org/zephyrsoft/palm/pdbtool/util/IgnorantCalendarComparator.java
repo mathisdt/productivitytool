@@ -1,4 +1,4 @@
-package org.zephyrsoft.pdbtool.util;
+package org.zephyrsoft.palm.pdbtool.util;
 
 import java.util.*;
 

@@ -1,8 +1,8 @@
-package org.zephyrsoft.pdbtool.util;
+package org.zephyrsoft.palm.pdbtool.util;
 
 import java.util.*;
 
-import org.zephyrsoft.pdbtool.structure.*;
+import org.zephyrsoft.palm.pdbtool.structure.*;
 
 /**
  * Vergleicht Personen anhand des Geburtstages.

@@ -1,14 +1,17 @@
-package org.zephyrsoft.pdbtool;
+package org.zephyrsoft.palm;
 
 import java.util.*;
 
 import javax.swing.*;
 
-import org.jSyncManager.API.Protocol.Util.*;
-import org.jSyncManager.API.Protocol.Util.StdApps.*;
-import org.zephyrsoft.pdbtool.structure.*;
-import org.zephyrsoft.pdbtool.util.*;
+import org.zephyrsoft.palm.pdbtool.*;
+import org.zephyrsoft.palm.pdbtool.structure.*;
+import org.zephyrsoft.palm.pdbtool.util.*;
 
+/**
+ * 
+ * @author Mathis Dirksen-Thedens
+ */
 public class Birthday {
 	
 	/** Diese Anzahl von Tagen wird im Voraus und im Nachhinein angezeigt. */
@@ -36,35 +39,14 @@ public class Birthday {
 	}
 	
 	private void loadPdbFile(String pdbFile) throws IllegalArgumentException {
-		persons = new ArrayList<Person>();
+		persons = PdbTool.loadContactPdbFile(pdbFile);
 		
 		// Testdaten:
+//		persons = new ArrayList<Person>();
 //		persons.add(new Person("Sophie", "Dirksen-Thedens", "16.4.", "0511 5334911", "", "", ""));
 //		persons.add(new Person("Mathis", "Dirksen-Thedens", "19.04.81", "0511 5334911", "", "", ""));
 //		persons.add(new Person("???", "Dirksen-Thedens", "22.04.2008", "0511 5334911", "", "", ""));
 		
-		DLPDatabase db = null;
-		try {
-		   db = DLPDatabase.importFromFile(pdbFile);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("given file could not be read");
-		}
-		
-		for (int i = 0; i < db.getElements(); i++) {
-			Person person = null;
-			try {
-				ContactRecord element = new ContactRecord((DLPRecord)db.getElement(i));
-				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), element.getPhones(0), element.getPhones(1), element.getPhones(2), element.getPhones(3));
-			} catch(ParseException pe) {
-				// tue nichts
-			}
-			
-			if (person!=null) {
-				persons.add(person);
-			}
-		}
-		
-		Collections.sort(persons, new PersonComparator());
 	}
 	
 	private void displayDueBirthdays() {
