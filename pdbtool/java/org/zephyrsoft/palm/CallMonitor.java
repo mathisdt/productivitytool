@@ -53,7 +53,8 @@ public class CallMonitor {
 					String inputLine;
 					if ((inputLine = in.readLine()) != null) {
 						// expected format: "0123456789|Name from Reverse Lookup"
-						// use following listener entry in Freetz configuration:
+						// use following listener entry in Freetz configuration
+						// (replace IPADDRESS with the address of the computer on which this program will run):
 						//       in:request ^ ^ rawmsg -t "${SOURCE}|${SOURCE_NAME}" IPADDRESS -p 7777
 						StringTokenizer tokenizer = new StringTokenizer(inputLine, DELIMITER);
 						String number = null;
