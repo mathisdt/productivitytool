@@ -44,7 +44,7 @@ public class CallMonitor {
 			System.exit(-1);
 		} else {
 			try {
-				setupTrayIcon();
+//				setupTrayIcon();
 				loadPdbFile(args[0]);
 				ServerSocket serverSocket = new ServerSocket(7777);
 				while (true) {
@@ -131,6 +131,7 @@ public class CallMonitor {
 	private Image image = null;
 	private ImageIcon imageIcon = null;
 	
+	@SuppressWarnings("unused")
 	private void setupTrayIcon() {
 		if (SystemTray.isSupported()) {
 
