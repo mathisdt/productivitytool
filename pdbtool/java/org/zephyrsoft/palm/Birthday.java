@@ -75,8 +75,12 @@ public class Birthday {
 		String contactBegin = " (";
 		String contactEnd = ")";
 		
+		boolean birthdayFound = false;
 		for (Person person : persons) {
 			if (person.getBirthday()!=null && dateComparator.compare(begin, person.getBirthday())<=0 && dateComparator.compare(person.getBirthday(), end)<=0) {
+				if (!birthdayFound) {
+					birthdayFound = true;
+				}
 				// Geburtstag der Person liegt im gewünschten Zeitfenster
 				ColorMarkEnum colorMark = ColorMarkEnum.DATE_IS_TODAY;
 				if (dateComparator.compare(person.getBirthday(), now)<0) {
@@ -125,8 +129,10 @@ public class Birthday {
 		
 		toPrint.append("</html>");
 
-		// Meldung ausgeben:
-		JOptionPane.showMessageDialog(null, toPrint.toString(), "Geburtstage", javax.swing.JOptionPane.PLAIN_MESSAGE);
+		if (birthdayFound) {
+			// Meldung ausgeben:
+			JOptionPane.showMessageDialog(null, toPrint.toString(), "Geburtstage", javax.swing.JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 	
 	public static void main(String[] args) {
