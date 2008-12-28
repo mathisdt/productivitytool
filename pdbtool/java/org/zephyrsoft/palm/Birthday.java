@@ -50,7 +50,7 @@ public class Birthday {
 	}
 	
 	private void displayDueBirthdays() {
-		if (persons==null) {
+		if (persons==null || persons.size()==0) {
 			return;
 		}
 		GregorianCalendar cal = new GregorianCalendar();
