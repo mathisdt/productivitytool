@@ -49,6 +49,7 @@ public class Birthday {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void displayDueBirthdays() {
 		if (persons==null || persons.size()==0) {
 			return;
@@ -139,10 +140,12 @@ public class Birthday {
 		new Birthday(args);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private int calculateAge(Date date) {
 		return today.getYear()-date.getYear();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private String getDayNameThisYear(Date date) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);

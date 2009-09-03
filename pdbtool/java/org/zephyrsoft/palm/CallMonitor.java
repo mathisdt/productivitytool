@@ -126,12 +126,9 @@ public class CallMonitor {
 	}
 	
 	private TrayIcon trayIcon = null;
-	private boolean mouseIsOverTrayIcon = false;
-	private boolean mouseIsOverPopupMenu = false;
 	private Image image = null;
 	private ImageIcon imageIcon = null;
 	
-	@SuppressWarnings("unused")
 	private void setupTrayIcon() {
 		if (SystemTray.isSupported()) {
 
