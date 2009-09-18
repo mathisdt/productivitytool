@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+	- Erzeugt die JAR-Datei des Projekts
+	  (Hinweis: Source-Dateien werden NICHT automatisch vorher kompiliert!)
+-->
+<project default="jar" basedir=".">
+
+	<property name="title" value="pdbtool" />
+	
+	<property name="start.dir" value="${basedir}" />
+	<property name="src.dir" value="${start.dir}/java" />
+	<property name="bin.dir" value="${start.dir}/java" />
+	<property name="lib.dir" value="${start.dir}/lib" />
+	<property name="target.dir" value="${start.dir}/target" />
+	<property name="release.dir" value="${start.dir}/release" />
+
+	<target name="jar">
+		<antcall target="prepare" />
+		<antcall target="createJar" />
+		<!--
+		<copy todir="${release.dir}">
+			<fileset dir="${src.dir}">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		-->
+		<echo file="${release.dir}/run-${title}.bat" append="false">java -jar ${title}.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
+</echo>
+		<echo file="${release.dir}/run-${title}.sh" append="false">#!/bin/sh
+java -jar ${title}.jar $$*
+</echo>
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${release.dir}"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${target.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${release.dir}" includes="**/*" />
+		</delete>
+	</target>
+
+	<target name="createJar">
+		<!-- Informationen zur Version einlesen -->
+		<!--
+		<property file="src/version.properties" />
+		<echo message="read properties file: version=${programVersion}, date=${programDate}" />
+		-->
+		
+		<!-- Klassen und Ressourcen kopieren -->
+		<copy todir="${target.dir}">
+			<fileset dir="${bin.dir}">
+				<include name="org/zephyrsoft/**" />
+				<include name="images/**" />
+				<exclude name="CVS/**" />
+				<exclude name=".svn/**" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!-- Bibliotheken hinzufügen -->
+		<unzip dest="${target.dir}">
+			<patternset>
+				<exclude name="META-INF/services/**"/>
+				<exclude name="META-INF/MANIFEST.MF"/>
+			</patternset>
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar"/>
+				<exclude name="**/*-src.zip"/>
+				<exclude name="**/*-src.jar"/>
+			</fileset>
+		</unzip>
+
+		<!-- Ziel-JAR erstellen -->
+		<jar basedir="${target.dir}" destfile="${release.dir}/${title}.jar">
+			<manifest>
+				<attribute name="Implementation-Vendor" value="zephyrsoft.net"/>
+				<attribute name="Implementation-Title" value="PDB-Tool"/>
+				<!--
+				<attribute name="Main-Class" value="org.zephyrsoft.sdb.Start" />
+				<attribute name="Implementation-Version" value="${programVersion} (published in ${programDate})"/>
+				-->
+			</manifest>
+		</jar>
+	</target>
+
+</project>
