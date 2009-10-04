@@ -14,11 +14,12 @@ public class Person {
 	private String phone2 = null;
 	private String phone3 = null;
 	private String email = null;
+	private int reihenfolge = 0;
 	
 	/**
 	 * Konstruktor mit dem Geburtstag als Date.
 	 */
-	public Person(String givenname, String lastname, Date birthday, String phone1, String phone2, String phone3, String email) {
+	public Person(String givenname, String lastname, Date birthday, String phone1, String phone2, String phone3, String email, String reihenfolge) {
 		setGivenname(givenname);
 		setLastname(lastname);
 		setBirthday(birthday);
@@ -26,12 +27,13 @@ public class Person {
 		setPhone2(phone2);
 		setPhone3(phone3);
 		setEmail(email);
+		setReihenfolge(correctReihenfolge(reihenfolge));
 	}
 	
 	/**
 	 * Konstruktor mit dem Geburtstag als String (wird intern geparst, erwartetes Format: D.M.Y mit Y zwei- oder vierstellig optional).
 	 */
-	public Person(String givenname, String lastname, String birthday, String phone1, String phone2, String phone3, String email) {
+	public Person(String givenname, String lastname, String birthday, String phone1, String phone2, String phone3, String email, String reihenfolge) {
 		setGivenname(givenname);
 		setLastname(lastname);
 		GregorianCalendar cal = correctDate(birthday);
@@ -42,6 +44,20 @@ public class Person {
 		setPhone2(phone2);
 		setPhone3(phone3);
 		setEmail(email);
+		setReihenfolge(correctReihenfolge(reihenfolge));
+	}
+	
+	private int correctReihenfolge(String reihenfolgeString) {
+		if (reihenfolgeString==null) {
+			return 0;
+		}
+		int rf = 0;
+		try {
+			rf = Integer.parseInt(reihenfolgeString);
+		} catch (NumberFormatException nfe) {
+			// tue nichts, der Wert von rf wurde schon oben auf 0 gesetzt
+		}
+		return rf;
 	}
 	
 	/**
@@ -169,6 +185,14 @@ public class Person {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public int getReihenfolge() {
+		return reihenfolge;
+	}
+
+	public void setReihenfolge(int reihenfolge) {
+		this.reihenfolge = reihenfolge;
 	}
 	
 }

@@ -31,7 +31,7 @@ public class PdbTool {
 			Person person = null;
 			try {
 				ContactRecord element = new ContactRecord((DLPRecord)db.getElement(i));
-				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), element.getPhones(0), element.getPhones(1), element.getPhones(2), element.getPhones(3));
+				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), element.getPhones(0), element.getPhones(1), element.getPhones(2), element.getPhones(3), element.getCustomField(1));
 			} catch(ParseException pe) {
 				// tue nichts
 			}

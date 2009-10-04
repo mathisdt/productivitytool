@@ -208,7 +208,7 @@ public class CallMonitor {
 	private void addPerson(String number, Person person) {
 		number = removeSpaces(number);
 		if (number2persons.get(number)==null) {
-			Set<Person> newSet = new HashSet<Person>();
+			Set<Person> newSet = new TreeSet<Person>(new PersonComparator<Person>());
 			newSet.add(person);
 			number2persons.put(number, newSet);
 		} else {
@@ -224,6 +224,28 @@ public class CallMonitor {
 		} else {
 			return in.replaceAll(SPACE, EMPTY_STRING);
 		}
+	}
+	
+	protected class PersonComparator<Person> implements Comparator<Person> {
+
+		public int compare(Person o1, Person o2) {
+			if (o1==null && o2!=null) {
+				return -1;
+			} else if (o1!=null && o2==null) {
+				return 1;
+			} else if (o1==null && o2==null) {
+				return 0;
+			} else {
+				// beide Person-Objekte sind ungleich null
+				// TODO 
+				if (true) {
+					return 1;
+				} else {
+					return 1;
+				}
+			}
+		}
+		
 	}
 
 }
