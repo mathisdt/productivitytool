@@ -45,7 +45,9 @@ public class CallMonitor {
 		} else {
 			try {
 //				setupTrayIcon();
-				loadPdbFile(args[0]);
+				Object[] data = loadPdbFile(args[0]);
+				persons = (List<Person>)data[0];
+				number2persons = (HashMap<String, Set<Person>>)data[1];
 				ServerSocket serverSocket = new ServerSocket(7777);
 				while (true) {
 					Socket clientSocket = serverSocket.accept();
@@ -69,16 +71,21 @@ public class CallMonitor {
 						Set<Person> personsFromPdb = number2persons.get(number);
 						if (personsFromPdb!=null) {
 							boolean isFirst = true;
+							Person person = null;
 							for (Iterator<Person> iter = personsFromPdb.iterator(); iter.hasNext(); ) {
-								Person person = iter.next();
-								if (!isFirst) {
-									nameBuilderFromPdb.append(AND);
-								} else {
+								Person prevPerson = person;
+								person = iter.next();
+								if (isFirst) {
 									isFirst = false;
+									prevPerson = person;
+								} else {
+									nameBuilderFromPdb.append(AND);
 								}
-								nameBuilderFromPdb.append(person.getGivenname())
-									.append(SPACE)
-									.append(person.getLastname());
+								nameBuilderFromPdb.append(person.getGivenname());
+								if (!iter.hasNext() || !eq(prevPerson.getLastname(), person.getLastname())) {
+									nameBuilderFromPdb.append(SPACE);
+									nameBuilderFromPdb.append(person.getLastname());
+								}
 							}
 						} else {
 							StringTokenizer subTokenizer = new StringTokenizer(nameFromReverseLookup, COMMA);
@@ -107,6 +114,17 @@ public class CallMonitor {
 			    System.err.println("Problem with port 7777!");
 				System.exit(-3);
 			}
+		}
+	}
+	
+	private static boolean eq(String s1, String s2) {
+		if ((s1==null && s2!=null) || (s1!=null && s2==null)) {
+			return false;
+		} else if (s1==null && s2==null) {
+			return true;
+		} else {
+			// beide Strings sind ungleich null
+			return s1.equals(s2);
 		}
 	}
 	
@@ -182,8 +200,8 @@ public class CallMonitor {
 		}
 	}
 	
-	private void loadPdbFile(String pdbFile) throws IllegalArgumentException {
-		persons = PdbTool.loadContactPdbFile(pdbFile);
+	public static Object[] loadPdbFile(String pdbFile) throws IllegalArgumentException {
+		List<Person> internal_persons = PdbTool.loadContactPdbFile(pdbFile);
 		
 		// Testdaten:
 //		persons = new ArrayList<Person>();
@@ -191,24 +209,26 @@ public class CallMonitor {
 //		persons.add(new Person("Mathis", "Dirksen-Thedens", "19.04.81", "0511 5334911", "", "", ""));
 //		persons.add(new Person("???", "Dirksen-Thedens", "22.04.2008", "0511 5334911", "", "", ""));
 		
-		number2persons = new HashMap<String, Set<Person>>();
-		for (Person person : persons) {
+		HashMap<String, Set<Person>> internal_number2persons = new HashMap<String, Set<Person>>();
+		for (Person person : internal_persons) {
 			if (person.getPhone1()!=null && !person.getPhone1().equals(EMPTY_STRING)) {
-				addPerson(person.getPhone1(), person);
+				addPerson(person.getPhone1(), person, internal_number2persons);
 			}
 			if (person.getPhone2()!=null && !person.getPhone2().equals(EMPTY_STRING)) {
-				addPerson(person.getPhone2(), person);
+				addPerson(person.getPhone2(), person, internal_number2persons);
 			}
 			if (person.getPhone3()!=null && !person.getPhone3().equals(EMPTY_STRING)) {
-				addPerson(person.getPhone3(), person);
+				addPerson(person.getPhone3(), person, internal_number2persons);
 			}
 		}
+		
+		return new Object[] {internal_persons, internal_number2persons};
 	}
 	
-	private void addPerson(String number, Person person) {
+	private static void addPerson(String number, Person person, HashMap<String, Set<Person>> number2persons) {
 		number = removeSpaces(number);
 		if (number2persons.get(number)==null) {
-			Set<Person> newSet = new TreeSet<Person>(new PersonComparator<Person>());
+			Set<Person> newSet = new TreeSet<Person>(new PersonReihenfolgeComparator<Person>());
 			newSet.add(person);
 			number2persons.put(number, newSet);
 		} else {
@@ -226,23 +246,73 @@ public class CallMonitor {
 		}
 	}
 	
-	protected class PersonComparator<Person> implements Comparator<Person> {
+	/**
+	 * Vergleicht Personen <b>zuerst nach Reihenfolge</b>, d.h. wenn nur zwei Personen die gleiche Zahl
+	 * im Attribut Reihenfolge stehen haben, werden sie überhaupt erst nach Namen verglichen! 
+	 */
+	protected static class PersonReihenfolgeComparator<P extends Person> implements Comparator<P> {
 
-		public int compare(Person o1, Person o2) {
-			if (o1==null && o2!=null) {
+		public int compare(P p1, P p2) {
+			if (p1==null && p2!=null) {
 				return -1;
-			} else if (o1!=null && o2==null) {
+			} else if (p1!=null && p2==null) {
 				return 1;
-			} else if (o1==null && o2==null) {
+			} else if (p1==null && p2==null) {
 				return 0;
 			} else {
 				// beide Person-Objekte sind ungleich null
-				// TODO 
-				if (true) {
+				if (p1.getReihenfolge() < p2.getReihenfolge()) {
+					return -1;
+				} else if (p1.getReihenfolge() > p2.getReihenfolge()) {
 					return 1;
 				} else {
-					return 1;
+					// jetzt nach Nachname vergleichen
+					int byLastname = cmp(p1.getLastname(), p2.getLastname());
+					if (byLastname!=0) {
+						return byLastname;
+					} else {
+						// jetzt nach Vorname vergleichen
+						int byGivenName = cmp(p1.getGivenname(), p2.getGivenname());
+						if (byGivenName!=0) {
+							return byGivenName;
+						} else {
+							// jetzt nach Geburtstag vergleichen
+							int byBirthday = cmp(p1.getBirthday(), p2.getBirthday());
+							if (byBirthday!=0) {
+								return byBirthday;
+							} else {
+								// dann sind sie halt gleich!
+								return 0;
+							}
+						}
+					}
 				}
+			}
+		}
+		
+		private int cmp(String s1, String s2) {
+			if (s1==null && s2!=null) {
+				return -1;
+			} else if (s1!=null && s2==null) {
+				return 1;
+			} else if (s1==null && s2==null) {
+				return 0;
+			} else {
+				// beide Strings sind ungleich null
+				return s1.compareTo(s2);
+			}
+		}
+		
+		private int cmp(Date d1, Date d2) {
+			if (d1==null && d2!=null) {
+				return -1;
+			} else if (d1!=null && d2==null) {
+				return 1;
+			} else if (d1==null && d2==null) {
+				return 0;
+			} else {
+				// beide Daten sind ungleich null
+				return d1.compareTo(d2);
 			}
 		}
 		
