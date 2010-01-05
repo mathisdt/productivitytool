@@ -1,5 +1,6 @@
 package org.zephyrsoft.palm.pdbtool.structure;
 
+import java.text.*;
 import java.util.*;
 
 public class Person {
@@ -15,6 +16,10 @@ public class Person {
 	private String phone3 = null;
 	private String email = null;
 	private int reihenfolge = 0;
+	
+	private Date curDate = new Date();
+	private SimpleDateFormat onlyYear = new SimpleDateFormat("yyyy");
+	
 	
 	/**
 	 * Konstruktor mit dem Geburtstag als Date.
@@ -82,10 +87,18 @@ public class Person {
 			try {
 				cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(datum.substring(0,datum.indexOf("."))) );
 				cal.set(Calendar.MONTH, Integer.parseInt(datum.substring(datum.indexOf(".")+1,datum.lastIndexOf(".")))-1);
-				if (datum.substring(datum.lastIndexOf(".")+1).length()==2) {
-					cal.set(Calendar.YEAR, Integer.parseInt("19" + datum.substring(datum.lastIndexOf(".")+1)));
-				} else if (datum.substring(datum.lastIndexOf(".")+1).length()==4) {
-					cal.set(Calendar.YEAR, Integer.parseInt(datum.substring(datum.lastIndexOf(".")+1)));
+				String yr = datum.substring(datum.lastIndexOf(".")+1);
+				if (yr.length()==2) {
+					String curYr = onlyYear.format(curDate).substring(2, 4);
+					String curCt = onlyYear.format(curDate).substring(0, 2);
+					if (Integer.parseInt(yr) <= Integer.parseInt(curYr)) {
+						cal.set(Calendar.YEAR, Integer.parseInt(curCt + yr));
+					} else {
+						String lastCt = String.valueOf(Integer.parseInt(curCt) - 1);
+						cal.set(Calendar.YEAR, Integer.parseInt(lastCt + yr));
+					}
+				} else if (yr.length()==4) {
+					cal.set(Calendar.YEAR, Integer.parseInt(yr));
 				}
 			} catch(Exception e) {
 				System.err.println("ignored following exception:");
