@@ -66,7 +66,7 @@ public class CallNotification {
 							} else {
 								nameBuilderFromPdb.append(AND);
 							}
-							nameBuilderFromPdb.append(person.getGivenname());
+							nameBuilderFromPdb.append((person.getGivenname()==null ? EMPTY_STRING : person.getGivenname()));
 							if (!iter.hasNext() || !eq(prevPerson.getLastname(), person.getLastname())) {
 								nameBuilderFromPdb.append(SPACE);
 								nameBuilderFromPdb.append(person.getLastname());
