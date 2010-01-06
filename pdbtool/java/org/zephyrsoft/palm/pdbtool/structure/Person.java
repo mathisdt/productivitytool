@@ -14,42 +14,112 @@ public class Person {
 	private String phone1 = null;
 	private String phone2 = null;
 	private String phone3 = null;
-	private String email = null;
+	private String phone4 = null;
+	private String phone5 = null;
+	private String phone6 = null;
+	private String phone7 = null;
+	private String email1 = null;
+	private String email2 = null;
+	private String email3 = null;
+	private String email4 = null;
+	private String email5 = null;
+	private String email6 = null;
+	private String email7 = null;
 	private int reihenfolge = 0;
 	
-	private Date curDate = new Date();
-	private SimpleDateFormat onlyYear = new SimpleDateFormat("yyyy");
+	private static Date curDate = new Date();
+	private static SimpleDateFormat onlyYear = new SimpleDateFormat("yyyy");
 	
 	
 	/**
 	 * Konstruktor mit dem Geburtstag als Date.
 	 */
-	public Person(String givenname, String lastname, Date birthday, String phone1, String phone2, String phone3, String email, String reihenfolge) {
+	public Person(String givenname, String lastname, Date birthday, String[] phone, String[] email, String reihenfolge) {
 		setGivenname(givenname);
 		setLastname(lastname);
 		setBirthday(birthday);
-		setPhone1(phone1);
-		setPhone2(phone2);
-		setPhone3(phone3);
-		setEmail(email);
+		int usedPhone = 0;
+		for (String one : phone) {
+			if (!isEmpty(one)) {
+				switch (usedPhone) {
+					case 0:
+						setPhone1(one);
+						usedPhone++;
+						break;
+					case 1:
+						setPhone2(one);
+						usedPhone++;
+						break;
+					case 2:
+						setPhone3(one);
+						usedPhone++;
+						break;
+					case 3:
+						setPhone4(one);
+						usedPhone++;
+						break;
+					case 4:
+						setPhone5(one);
+						usedPhone++;
+						break;
+					case 5:
+						setPhone6(one);
+						usedPhone++;
+						break;
+					case 6:
+						setPhone7(one);
+						usedPhone++;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		int usedEmail = 0;
+		for (String one : email) {
+			if (!isEmpty(one)) {
+				switch (usedEmail) {
+					case 0:
+						setEmail1(one);
+						usedEmail++;
+						break;
+					case 1:
+						setEmail2(one);
+						usedEmail++;
+						break;
+					case 2:
+						setEmail3(one);
+						usedEmail++;
+						break;
+					case 3:
+						setEmail4(one);
+						usedEmail++;
+						break;
+					case 4:
+						setEmail5(one);
+						usedEmail++;
+						break;
+					case 5:
+						setEmail6(one);
+						usedEmail++;
+						break;
+					case 6:
+						setEmail7(one);
+						usedEmail++;
+						break;
+					default:
+						break;
+				}
+			}
+		}
 		setReihenfolge(correctReihenfolge(reihenfolge));
 	}
 	
 	/**
 	 * Konstruktor mit dem Geburtstag als String (wird intern geparst, erwartetes Format: D.M.Y mit Y zwei- oder vierstellig optional).
 	 */
-	public Person(String givenname, String lastname, String birthday, String phone1, String phone2, String phone3, String email, String reihenfolge) {
-		setGivenname(givenname);
-		setLastname(lastname);
-		GregorianCalendar cal = correctDate(birthday);
-		if (cal!=null) {
-			setBirthday(cal.getTime());
-		}
-		setPhone1(phone1);
-		setPhone2(phone2);
-		setPhone3(phone3);
-		setEmail(email);
-		setReihenfolge(correctReihenfolge(reihenfolge));
+	public Person(String givenname, String lastname, String birthday, String[] phone, String[] email, String reihenfolge) {
+		this(givenname, lastname, makeDateOrNull(correctDate(birthday)), phone, email, reihenfolge);
 	}
 	
 	private int correctReihenfolge(String reihenfolgeString) {
@@ -65,6 +135,14 @@ public class Person {
 		return rf;
 	}
 	
+	private static Date makeDateOrNull(GregorianCalendar cal) {
+		if (cal==null) {
+			return null;
+		} else {
+			return cal.getTime();
+		}
+	}
+	
 	/**
 	 * Parst das Datum aus dem String. Erwartetes Format: DD.MM.YYYY - wobei das Jahr optional ist
 	 * und auch nur zweistellig sein kann (dann wird 19.. angenommen) und die Länge 
@@ -72,7 +150,7 @@ public class Person {
 	 * Wenn das Datum nicht herausfindbar ist (falsches Format, leer o.ä.), wird der 01.01.2200 zurückgegeben.
 	 * Wenn nur das Jahr fehlt, wird es auf 2200 gesetzt, der Rest des Datums ist aber entsprechend der Eingabe.
 	 */
-	private GregorianCalendar correctDate(String datum) {
+	private static GregorianCalendar correctDate(String datum) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -126,12 +204,72 @@ public class Person {
 			}
 			ret.append(getPhone3());
 		}
-		// nur wenn keine Telefonnummern vorhanden sind
-		if (isEmpty(ret) && !isEmpty(getEmail())) {
+		if (!isEmpty(getPhone4())) {
 			if (!isEmpty(ret)) {
 				ret.append(SEPARATOR);
 			}
-			ret.append(getEmail());
+			ret.append(getPhone4());
+		}
+		if (!isEmpty(getPhone5())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getPhone5());
+		}
+		if (!isEmpty(getPhone6())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getPhone6());
+		}
+		if (!isEmpty(getPhone7())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getPhone7());
+		}
+		// jetzt Email-Adressen
+		if (!isEmpty(getEmail1())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail1());
+		}
+		if (!isEmpty(getEmail2())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail2());
+		}
+		if (!isEmpty(getEmail3())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail3());
+		}
+		if (!isEmpty(getEmail4())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail4());
+		}
+		if (!isEmpty(getEmail5())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail5());
+		}
+		if (!isEmpty(getEmail6())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail6());
+		}
+		if (!isEmpty(getEmail7())) {
+			if (!isEmpty(ret)) {
+				ret.append(SEPARATOR);
+			}
+			ret.append(getEmail7());
 		}
 		return ret.toString();
 	}
@@ -192,12 +330,12 @@ public class Person {
 		this.phone3 = phone3;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getEmail1() {
+		return email1;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmail1(String email1) {
+		this.email1 = email1;
 	}
 
 	public int getReihenfolge() {
@@ -206,6 +344,86 @@ public class Person {
 
 	public void setReihenfolge(int reihenfolge) {
 		this.reihenfolge = reihenfolge;
+	}
+
+	public String getPhone4() {
+		return phone4;
+	}
+
+	public void setPhone4(String phone4) {
+		this.phone4 = phone4;
+	}
+
+	public String getPhone5() {
+		return phone5;
+	}
+
+	public void setPhone5(String phone5) {
+		this.phone5 = phone5;
+	}
+
+	public String getPhone6() {
+		return phone6;
+	}
+
+	public void setPhone6(String phone6) {
+		this.phone6 = phone6;
+	}
+
+	public String getPhone7() {
+		return phone7;
+	}
+
+	public void setPhone7(String phone7) {
+		this.phone7 = phone7;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
+	}
+
+	public String getEmail3() {
+		return email3;
+	}
+
+	public void setEmail3(String email3) {
+		this.email3 = email3;
+	}
+
+	public String getEmail4() {
+		return email4;
+	}
+
+	public void setEmail4(String email4) {
+		this.email4 = email4;
+	}
+
+	public String getEmail5() {
+		return email5;
+	}
+
+	public void setEmail5(String email5) {
+		this.email5 = email5;
+	}
+
+	public String getEmail6() {
+		return email6;
+	}
+
+	public void setEmail6(String email6) {
+		this.email6 = email6;
+	}
+
+	public String getEmail7() {
+		return email7;
+	}
+
+	public void setEmail7(String email7) {
+		this.email7 = email7;
 	}
 	
 }

@@ -189,6 +189,18 @@ public class CallNotification {
 			if (person.getPhone3()!=null && !person.getPhone3().equals(EMPTY_STRING)) {
 				addPerson(person.getPhone3(), person, internal_number2persons);
 			}
+			if (person.getPhone4()!=null && !person.getPhone4().equals(EMPTY_STRING)) {
+				addPerson(person.getPhone4(), person, internal_number2persons);
+			}
+			if (person.getPhone5()!=null && !person.getPhone5().equals(EMPTY_STRING)) {
+				addPerson(person.getPhone5(), person, internal_number2persons);
+			}
+			if (person.getPhone6()!=null && !person.getPhone6().equals(EMPTY_STRING)) {
+				addPerson(person.getPhone6(), person, internal_number2persons);
+			}
+			if (person.getPhone7()!=null && !person.getPhone7().equals(EMPTY_STRING)) {
+				addPerson(person.getPhone7(), person, internal_number2persons);
+			}
 		}
 		
 		return new Object[] {internal_persons, internal_number2persons};

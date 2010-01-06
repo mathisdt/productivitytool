@@ -31,7 +31,25 @@ public class PdbTool {
 			Person person = null;
 			try {
 				ContactRecord element = new ContactRecord((DLPRecord)db.getElement(i));
-				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), element.getPhones(0), element.getPhones(1), element.getPhones(2), element.getPhones(3), element.getCustomField(1));
+				List<String> phones = new ArrayList<String>();
+				List<String> emails = new ArrayList<String>();
+				int cnt = 0;
+				for (String one : element.getPhones()) {
+					if (one != null && !one.isEmpty()) {
+						if (((long)element.getPhoneField(cnt)) == ContactRecord.HOME_LABEL
+							|| ((long)element.getPhoneField(cnt)) == ContactRecord.WORK_LABEL
+							|| ((long)element.getPhoneField(cnt)) == ContactRecord.MAIN_LABEL
+							|| ((long)element.getPhoneField(cnt)) == ContactRecord.MOBILE_LABEL) {
+							// Telefon
+							phones.add(one);
+						} else if (((long)element.getPhoneField(cnt)) == ContactRecord.EMAIL_LABEL) {
+							// Email
+							emails.add(one);
+						}
+					}
+					cnt++;
+				}
+				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), makeStringArray(phones), makeStringArray(emails), element.getCustomField(1));
 			} catch(ParseException pe) {
 				// tue nichts
 			}
@@ -43,6 +61,16 @@ public class PdbTool {
 		
 		Collections.sort(ret, new PersonComparator());
 		
+		return ret;
+	}
+	
+	private static String[] makeStringArray(List<String> list) {
+		String[] ret = new String[list.size()];
+		int cnt = 0;
+		for (String str : list) {
+			ret[cnt] = str;
+			cnt++;
+		}
 		return ret;
 	}
 	
