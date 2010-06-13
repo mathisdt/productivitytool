@@ -9,6 +9,7 @@ import org.jSyncManager.API.Protocol.Util.*;
 import org.jSyncManager.API.Protocol.Util.StdApps.*;
 import org.zephyrsoft.palm.pdbtool.structure.*;
 import org.zephyrsoft.palm.pdbtool.util.*;
+import org.zephyrsoft.palm.pdbtool.util.PersonComparator.*;
 
 /**
  * Statische Hilfsklasse zur Behandlung von Palm-PDB-Dateien.
@@ -49,7 +50,7 @@ public class PdbTool {
 					}
 					cnt++;
 				}
-				person = new Person(element.getGivenName(), element.getSurname(), element.getCustomField(0), makeStringArray(phones), makeStringArray(emails), element.getCustomField(1));
+				person = new Person(element.getGivenName(), element.getSurname(), element.getCompany(), element.getCustomField(0), makeStringArray(phones), makeStringArray(emails), element.getCustomField(1));
 			} catch(ParseException pe) {
 				// tue nichts
 			}
@@ -59,7 +60,7 @@ public class PdbTool {
 			}
 		}
 		
-		Collections.sort(ret, new PersonComparator());
+		Collections.sort(ret, new PersonComparator(ComparationCriteria.BIRTHDAY));
 		
 		return ret;
 	}

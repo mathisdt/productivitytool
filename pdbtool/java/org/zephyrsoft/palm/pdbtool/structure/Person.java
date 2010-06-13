@@ -10,6 +10,7 @@ public class Person {
 	
 	private String givenname = null;
 	private String lastname = null;
+	private String business = null;
 	private Date birthday = null;
 	private String phone1 = null;
 	private String phone2 = null;
@@ -34,81 +35,86 @@ public class Person {
 	/**
 	 * Konstruktor mit dem Geburtstag als Date.
 	 */
-	public Person(String givenname, String lastname, Date birthday, String[] phone, String[] email, String reihenfolge) {
+	public Person(String givenname, String lastname, String business, Date birthday, String[] phone, String[] email, String reihenfolge) {
 		setGivenname(givenname);
 		setLastname(lastname);
+		setBusiness(business);
 		setBirthday(birthday);
 		int usedPhone = 0;
-		for (String one : phone) {
-			if (!isEmpty(one)) {
-				switch (usedPhone) {
-					case 0:
-						setPhone1(one);
-						usedPhone++;
-						break;
-					case 1:
-						setPhone2(one);
-						usedPhone++;
-						break;
-					case 2:
-						setPhone3(one);
-						usedPhone++;
-						break;
-					case 3:
-						setPhone4(one);
-						usedPhone++;
-						break;
-					case 4:
-						setPhone5(one);
-						usedPhone++;
-						break;
-					case 5:
-						setPhone6(one);
-						usedPhone++;
-						break;
-					case 6:
-						setPhone7(one);
-						usedPhone++;
-						break;
-					default:
-						break;
+		if (phone!=null) {
+			for (String one : phone) {
+				if (!isEmpty(one)) {
+					switch (usedPhone) {
+						case 0:
+							setPhone1(one);
+							usedPhone++;
+							break;
+						case 1:
+							setPhone2(one);
+							usedPhone++;
+							break;
+						case 2:
+							setPhone3(one);
+							usedPhone++;
+							break;
+						case 3:
+							setPhone4(one);
+							usedPhone++;
+							break;
+						case 4:
+							setPhone5(one);
+							usedPhone++;
+							break;
+						case 5:
+							setPhone6(one);
+							usedPhone++;
+							break;
+						case 6:
+							setPhone7(one);
+							usedPhone++;
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
 		int usedEmail = 0;
-		for (String one : email) {
-			if (!isEmpty(one)) {
-				switch (usedEmail) {
-					case 0:
-						setEmail1(one);
-						usedEmail++;
-						break;
-					case 1:
-						setEmail2(one);
-						usedEmail++;
-						break;
-					case 2:
-						setEmail3(one);
-						usedEmail++;
-						break;
-					case 3:
-						setEmail4(one);
-						usedEmail++;
-						break;
-					case 4:
-						setEmail5(one);
-						usedEmail++;
-						break;
-					case 5:
-						setEmail6(one);
-						usedEmail++;
-						break;
-					case 6:
-						setEmail7(one);
-						usedEmail++;
-						break;
-					default:
-						break;
+		if (email!=null) {
+			for (String one : email) {
+				if (!isEmpty(one)) {
+					switch (usedEmail) {
+						case 0:
+							setEmail1(one);
+							usedEmail++;
+							break;
+						case 1:
+							setEmail2(one);
+							usedEmail++;
+							break;
+						case 2:
+							setEmail3(one);
+							usedEmail++;
+							break;
+						case 3:
+							setEmail4(one);
+							usedEmail++;
+							break;
+						case 4:
+							setEmail5(one);
+							usedEmail++;
+							break;
+						case 5:
+							setEmail6(one);
+							usedEmail++;
+							break;
+						case 6:
+							setEmail7(one);
+							usedEmail++;
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
@@ -118,8 +124,16 @@ public class Person {
 	/**
 	 * Konstruktor mit dem Geburtstag als String (wird intern geparst, erwartetes Format: D.M.Y mit Y zwei- oder vierstellig optional).
 	 */
-	public Person(String givenname, String lastname, String birthday, String[] phone, String[] email, String reihenfolge) {
-		this(givenname, lastname, makeDateOrNull(correctDate(birthday)), phone, email, reihenfolge);
+	public Person(String givenname, String lastname, String business, String birthday, String[] phone, String[] email, String reihenfolge) {
+		this(givenname, lastname, business, makeDateOrNull(correctDate(birthday)), phone, email, reihenfolge);
+	}
+	
+	public String toString() {
+		return (isNotEmpty(getGivenname()) ? getGivenname() : "") +
+			(isNotEmpty(getGivenname()) && isNotEmpty(getLastname()) ? " " : "") +
+			(isNotEmpty(getLastname()) ? getLastname() : "") +
+			((isNotEmpty(getGivenname()) || isNotEmpty(getLastname())) && isNotEmpty(getBusiness()) ? " / " : "") +
+			(isNotEmpty(getBusiness()) ? getBusiness() : "");
 	}
 	
 	private int correctReihenfolge(String reihenfolgeString) {
@@ -188,6 +202,17 @@ public class Person {
 	}
 	
 	public String getContactPossibilities() {
+		String phones = getPhones();
+		String emails = getEmails();
+		String ret = phones;
+		if (!isEmpty(phones) && !isEmpty(emails)) {
+			ret += SEPARATOR;
+		}
+		ret += emails;
+		return ret;
+	}
+	
+	public String getPhones() {
 		StringBuilder ret = new StringBuilder();
 		if (!isEmpty(getPhone1())) {
 			ret.append(getPhone1());
@@ -228,11 +253,12 @@ public class Person {
 			}
 			ret.append(getPhone7());
 		}
-		// jetzt Email-Adressen
+		return ret.toString();
+	}
+	
+	public String getEmails() {
+		StringBuilder ret = new StringBuilder();
 		if (!isEmpty(getEmail1())) {
-			if (!isEmpty(ret)) {
-				ret.append(SEPARATOR);
-			}
 			ret.append(getEmail1());
 		}
 		if (!isEmpty(getEmail2())) {
@@ -274,8 +300,38 @@ public class Person {
 		return ret.toString();
 	}
 	
+	public String[] getPhonesArray() {
+		List<String> ret = new ArrayList<String>();
+		if (!isEmpty(getPhone1())) {
+			ret.add(getPhone1());
+		}
+		if (!isEmpty(getPhone2())) {
+			ret.add(getPhone2());
+		}
+		if (!isEmpty(getPhone3())) {
+			ret.add(getPhone3());
+		}
+		if (!isEmpty(getPhone4())) {
+			ret.add(getPhone4());
+		}
+		if (!isEmpty(getPhone5())) {
+			ret.add(getPhone5());
+		}
+		if (!isEmpty(getPhone6())) {
+			ret.add(getPhone6());
+		}
+		if (!isEmpty(getPhone7())) {
+			ret.add(getPhone7());
+		}
+		return ret.toArray(new String[0]);
+	}
+	
 	private static boolean isEmpty(String string) {
-		return (string==null || string.equals(EMPTY_STRING));
+		return (string==null || string.equals(""));
+	}
+	
+	private static boolean isNotEmpty(String string) {
+		return !isEmpty(string);
 	}
 	
 	private static boolean isEmpty(StringBuilder sb) {
@@ -424,6 +480,14 @@ public class Person {
 
 	public void setEmail7(String email7) {
 		this.email7 = email7;
+	}
+
+	public String getBusiness() {
+		return business;
+	}
+
+	public void setBusiness(String business) {
+		this.business = business;
 	}
 	
 }
