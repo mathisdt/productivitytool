@@ -27,6 +27,7 @@ public class Person {
 	private String email6 = null;
 	private String email7 = null;
 	private int reihenfolge = 0;
+	private Set<Person.Address> addresses = new HashSet<Person.Address>();
 	
 	private static Date curDate = new Date();
 	private static SimpleDateFormat onlyYear = new SimpleDateFormat("yyyy");
@@ -488,6 +489,55 @@ public class Person {
 
 	public void setBusiness(String business) {
 		this.business = business;
+	}
+	
+	public static class Address {
+		private String street;
+		private String zipCode;
+		private String city;
+		private Type type;
+		
+		public Address(String street, String zipCode, String city, Type type) {
+			this.street = street;
+			this.zipCode = zipCode;
+			this.city = city;
+			this.type = type;
+		}
+		
+		public String getStreet() {
+			return street;
+		}
+		public String getZipCode() {
+			return zipCode;
+		}
+		public String getCity() {
+			return city;
+		}
+		public Type getType() {
+			return type;
+		}
+		
+		public enum Type {
+			WORK,
+			HOME,
+			OTHER;
+		}
+	}
+
+	public boolean isAddressesEmpty() {
+		return addresses.isEmpty();
+	}
+
+	public boolean addAddress(Address e) {
+		return addresses.add(e);
+	}
+	
+	public Iterator<Address> addressesIterator() {
+		return addresses.iterator();
+	}
+
+	public Set<Address> getAdresses() {
+		return addresses;
 	}
 	
 }

@@ -4,10 +4,12 @@
 package org.zephyrsoft.palm.pdbtool;
 
 import java.util.*;
+import com.sun.xml.internal.ws.util.*;
 
 import org.jSyncManager.API.Protocol.Util.*;
 import org.jSyncManager.API.Protocol.Util.StdApps.*;
 import org.zephyrsoft.palm.pdbtool.structure.*;
+import org.zephyrsoft.palm.pdbtool.structure.Person.Address;
 import org.zephyrsoft.palm.pdbtool.util.*;
 import org.zephyrsoft.palm.pdbtool.util.PersonComparator.*;
 
@@ -51,6 +53,16 @@ public class PdbTool {
 					cnt++;
 				}
 				person = new Person(element.getGivenName(), element.getSurname(), element.getCompany(), element.getCustomField(0), makeStringArray(phones), makeStringArray(emails), element.getCustomField(1));
+				// add addresses (if any)
+				if (anyArgumentIsNotEmpty(element.getPrivateAddress(), element.getPrivatePostalCode(), element.getPrivateCity())) {
+					person.addAddress(new Address(element.getPrivateAddress(), element.getPrivatePostalCode(), element.getPrivateCity(), Address.Type.HOME));
+				}
+				if (anyArgumentIsNotEmpty(element.getCompanyAddress(), element.getCompanyPostalCode(), element.getCompanyCity())) {
+					person.addAddress(new Address(element.getCompanyAddress(), element.getCompanyPostalCode(), element.getCompanyCity(), Address.Type.WORK));
+				}
+				if (anyArgumentIsNotEmpty(element.getOtherAddress(), element.getOtherPostalCode(), element.getOtherCity())) {
+					person.addAddress(new Address(element.getOtherAddress(), element.getOtherPostalCode(), element.getOtherCity(), Address.Type.OTHER));
+				}
 			} catch(ParseException pe) {
 				// tue nichts
 			}
@@ -73,6 +85,15 @@ public class PdbTool {
 			cnt++;
 		}
 		return ret;
+	}
+	
+	private static boolean anyArgumentIsNotEmpty(String... args) {
+		for (String arg : args) {
+			if (arg!=null && arg.length()>0) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
