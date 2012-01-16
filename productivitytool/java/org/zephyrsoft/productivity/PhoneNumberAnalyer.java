@@ -1,7 +1,7 @@
-package org.zephyrsoft.palm;
+package org.zephyrsoft.productivity;
 
 import java.util.*;
-import org.zephyrsoft.palm.pdbtool.structure.*;
+import org.zephyrsoft.productivity.prodtool.structure.*;
 
 public class PhoneNumberAnalyer {
 	

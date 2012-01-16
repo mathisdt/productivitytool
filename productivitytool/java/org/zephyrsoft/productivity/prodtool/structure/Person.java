@@ -1,4 +1,4 @@
-package org.zephyrsoft.palm.pdbtool.structure;
+package org.zephyrsoft.productivity.prodtool.structure;
 
 import java.text.*;
 import java.util.*;

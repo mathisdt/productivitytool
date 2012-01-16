@@ -1,17 +1,17 @@
 /**
  * 
  */
-package org.zephyrsoft.palm.pdbtool;
+package org.zephyrsoft.productivity.prodtool;
 
 import java.util.*;
 import com.sun.xml.internal.ws.util.*;
 
 import org.jSyncManager.API.Protocol.Util.*;
 import org.jSyncManager.API.Protocol.Util.StdApps.*;
-import org.zephyrsoft.palm.pdbtool.structure.*;
-import org.zephyrsoft.palm.pdbtool.structure.Person.Address;
-import org.zephyrsoft.palm.pdbtool.util.*;
-import org.zephyrsoft.palm.pdbtool.util.PersonComparator.*;
+import org.zephyrsoft.productivity.prodtool.structure.*;
+import org.zephyrsoft.productivity.prodtool.structure.Person.*;
+import org.zephyrsoft.productivity.prodtool.util.*;
+import org.zephyrsoft.productivity.prodtool.util.PersonComparator.*;
 
 /**
  * Statische Hilfsklasse zur Behandlung von Palm-PDB-Dateien.

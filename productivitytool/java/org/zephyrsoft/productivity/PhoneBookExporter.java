@@ -1,4 +1,4 @@
-package org.zephyrsoft.palm;
+package org.zephyrsoft.productivity;
 
 import java.io.*;
 import java.text.*;
@@ -6,10 +6,10 @@ import java.util.*;
 
 import javax.swing.*;
 
-import org.zephyrsoft.palm.pdbtool.*;
-import org.zephyrsoft.palm.pdbtool.structure.*;
-import org.zephyrsoft.palm.pdbtool.util.*;
-import org.zephyrsoft.palm.pdbtool.util.PersonComparator.*;
+import org.zephyrsoft.productivity.prodtool.*;
+import org.zephyrsoft.productivity.prodtool.structure.*;
+import org.zephyrsoft.productivity.prodtool.util.*;
+import org.zephyrsoft.productivity.prodtool.util.PersonComparator.*;
 
 /**
  * 

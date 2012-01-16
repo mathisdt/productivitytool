@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.zephyrsoft.palm;
+package org.zephyrsoft.productivity;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,14 +14,14 @@ import java.util.List;
 import javax.imageio.*;
 import javax.swing.*;
 
-import org.zephyrsoft.palm.pdbtool.*;
-import org.zephyrsoft.palm.pdbtool.structure.*;
+import org.zephyrsoft.productivity.prodtool.*;
+import org.zephyrsoft.productivity.prodtool.structure.*;
 
 /**
  * 
  * @author Mathis Dirksen-Thedens
  */
-public class CallNotification {
+public class CallMonitor {
 	
 	private List<Person> persons = null;
 	private HashMap<String, Set<Person>> number2persons = null;
@@ -29,7 +29,7 @@ public class CallNotification {
 	private Charset charset = Charset.forName("ISO-8859-1");
 
 	public static void main(String[] args) {
-		new CallNotification(args);
+		new CallMonitor(args);
 	}
 	
 	private static final String DELIMITER = "|";
@@ -38,7 +38,7 @@ public class CallNotification {
 	private static final String SPACE = " ";
 	private static final String COMMA = ",";
 	
-	public CallNotification(String[] args) {
+	public CallMonitor(String[] args) {
 		if (args==null || args.length==0) {
 			System.err.println("Too few arguments. Please provide the path to the .pdb file to read!");
 			System.exit(-1);
@@ -48,40 +48,71 @@ public class CallNotification {
 				Object[] data = loadPdbFile(args[0]);
 				persons = (List<Person>)data[0];
 				number2persons = (HashMap<String, Set<Person>>)data[1];
-				if (args!=null && args.length>=2) {
-					// expected format: "0123456789"
-					String number = null;
-					StringBuilder nameBuilderFromPdb = new StringBuilder();
-					number = removeSpaces(args[1]);
-					Set<Person> personsFromPdb = number2persons.get(number);
-					if (personsFromPdb!=null) {
-						boolean isFirst = true;
-						Person person = null;
-						for (Iterator<Person> iter = personsFromPdb.iterator(); iter.hasNext(); ) {
-							Person prevPerson = person;
-							person = iter.next();
-							if (isFirst) {
-								isFirst = false;
-								prevPerson = person;
-							} else {
-								nameBuilderFromPdb.append(AND);
+				ServerSocket serverSocket = new ServerSocket(7777);
+				while (true) {
+					Socket clientSocket = serverSocket.accept();
+					BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), charset));
+					String inputLine;
+					if ((inputLine = in.readLine()) != null) {
+						// expected format: "0123456789|Name from Reverse Lookup"
+						// use following listener entry in Freetz configuration
+						// (replace IPADDRESS with the address of the computer on which this program will run):
+						//       in:request ^ ^ rawmsg -t "${SOURCE}|${SOURCE_NAME}" IPADDRESS -p 7777
+						StringTokenizer tokenizer = new StringTokenizer(inputLine, DELIMITER);
+						String number = null;
+						String nameFromReverseLookup = null;
+						StringBuilder nameBuilderFromPdb = new StringBuilder();
+						if (tokenizer.hasMoreTokens()) {
+							number = removeSpaces(tokenizer.nextToken());
+						}
+						if (tokenizer.hasMoreTokens()) {
+							nameFromReverseLookup = tokenizer.nextToken();
+						}
+						Set<Person> personsFromPdb = number2persons.get(number);
+						if (personsFromPdb!=null) {
+							boolean isFirst = true;
+							Person person = null;
+							for (Iterator<Person> iter = personsFromPdb.iterator(); iter.hasNext(); ) {
+								Person prevPerson = person;
+								person = iter.next();
+								if (isFirst) {
+									isFirst = false;
+									prevPerson = person;
+								} else {
+									nameBuilderFromPdb.append(AND);
+								}
+								nameBuilderFromPdb.append(person.getGivenname());
+								if (!iter.hasNext() || !eq(prevPerson.getLastname(), person.getLastname())) {
+									nameBuilderFromPdb.append(SPACE);
+									nameBuilderFromPdb.append(person.getLastname());
+								}
 							}
-							nameBuilderFromPdb.append((person.getGivenname()==null ? EMPTY_STRING : person.getGivenname()));
-							if (!iter.hasNext() || !eq(prevPerson.getLastname(), person.getLastname())) {
-								nameBuilderFromPdb.append(SPACE);
-								nameBuilderFromPdb.append(person.getLastname());
+						} else {
+							StringTokenizer subTokenizer = new StringTokenizer(nameFromReverseLookup, COMMA);
+							if (subTokenizer.hasMoreElements()) {
+								StringTokenizer subSubTokenizer = new StringTokenizer(subTokenizer.nextToken(), SPACE);
+								if (subSubTokenizer.hasMoreElements()) {
+									String lastname = subSubTokenizer.nextToken();
+									while (subSubTokenizer.hasMoreTokens()) {
+										nameBuilderFromPdb.append(SPACE).append(subSubTokenizer.nextToken());
+									}
+									nameBuilderFromPdb.append(SPACE).append(lastname);
+								}
 							}
 						}
-					} else {
-						nameBuilderFromPdb.append(number);
+						displayMessage(nameBuilderFromPdb.toString());
+						
+						
 					}
-					displayMessage(nameBuilderFromPdb.toString());
-					
-					
+					in.close();
+					clientSocket.close();
 				}
 			} catch (IllegalArgumentException iae) {
 				System.err.println("The given file could not be read!");
 				System.exit(-2);
+			} catch (IOException ioe) {
+			    System.err.println("Problem with port 7777!");
+				System.exit(-3);
 			}
 		}
 	}

@@ -1,8 +1,8 @@
-package org.zephyrsoft.palm.pdbtool.util;
+package org.zephyrsoft.productivity.prodtool.util;
 
 import java.util.*;
 
-import org.zephyrsoft.palm.pdbtool.structure.*;
+import org.zephyrsoft.productivity.prodtool.structure.*;
 
 /**
  * Vergleicht Personen anhand verschiedener Kriterien.
