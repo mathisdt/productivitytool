@@ -5,5 +5,8 @@
 	<classpathentry kind="lib" path="lib/jsyncmanager.jar" sourcepath="lib/jsyncmanager-src.jar"/>
 	<classpathentry kind="lib" path="lib/jsyncmanager-api.jar" sourcepath="lib/jsyncmanager-api-src.jar"/>
 	<classpathentry kind="lib" path="lib/jsyncmanager-jconduits.jar" sourcepath="lib/jsyncmanager-jconduits-src.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-2.2.10.jar" sourcepath="lib/jackrabbit-2.2.10-src.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/xdav4j-base"/>
+	<classpathentry kind="src" path="/xdav4j-calendar"/>
 	<classpathentry kind="output" path="java"/>
 </classpath>
